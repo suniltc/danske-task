@@ -7,7 +7,7 @@ import { CardContext } from "../context/CardContext";
 
 const schema = {
   type: "object",
-  // required: ["cvv", "cardNum"],
+  required: ["cvv", "cardNum"],
   properties: {
     cardNum: { type: "string", title: "Card Number", name: "cardNum" },
     cardHolderName: {
@@ -25,7 +25,6 @@ const uiSchema = {
 };
 
 const handleSubmit = ({ formData }) => {
-  console.log(formData, "111");
   fetch("http://localhost:3001/cards", {
     method: "post",
     headers: { "Content-Type": "application/json" },
@@ -40,29 +39,29 @@ const handleSubmit = ({ formData }) => {
     });
 };
 
-const AddCard = () => {
+const CustomTextField = (props) => {
   const { updateCardDetails } = useContext(CardContext);
 
-  const CustomTextField = (props) => {
-    const handleChange = (e) => {
-      props.onChange(e.target.value);
-      updateCardDetails(props.schema.name, e.target.value);
-    };
-
-    return (
-      <TextField
-        id="outlined-name"
-        label={props.label}
-        value={props.value}
-        onChange={(event) => handleChange(event)}
-      />
-    );
+  const handleChange = (e) => {
+    props.onChange(e.target.value);
+    updateCardDetails(props.schema.name, e.target.value);
   };
 
-  const widgets = {
-    TextWidget: CustomTextField,
-  };
+  return (
+    <TextField
+      id="outlined-name"
+      label={props.label}
+      value={props.value}
+      onChange={(event) => handleChange(event)}
+    />
+  );
+};
 
+const widgets = {
+  TextWidget: CustomTextField,
+};
+
+const AddCard = () => {
   return (
     <Container maxWidth="md">
       <h1>Credit Card</h1>

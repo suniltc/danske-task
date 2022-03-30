@@ -1,4 +1,4 @@
-import React, { createContext, useState, useReducer } from "react";
+import React, { createContext, useReducer } from "react";
 
 const initialValue = {
   cardNum: "",
@@ -22,7 +22,7 @@ function reducer(state, action) {
   }
 }
 
-const CardContext = createContext(initialValue);
+const CardContext = createContext();
 
 const CardProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialValue);

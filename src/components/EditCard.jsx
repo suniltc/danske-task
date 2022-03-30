@@ -5,6 +5,10 @@ import BasicCard from "./BasicCard";
 import Form from "@rjsf/material-ui";
 import { CardContext } from "../context/CardContext";
 
+const uiSchema = {
+  "ui:widget": "TextField",
+};
+
 const handleSubmit = ({ formData }, id) => {
   fetch(`http://localhost:3001/cards/${id}`, {
     method: "PUT",
@@ -70,20 +74,27 @@ const AddCard = () => {
     },
   };
 
-  const uiSchema = {
-    "ui:widget": (props) => {
-      return (
-        <TextField
-          id="outlined-name"
-          label={props.label}
-          value={props.value}
-          onChange={(event) => {
-            props.onChange(event.target.value);
-            updateCardDetails(props.schema.name, event.target.value);
-          }}
-        />
-      );
-    },
+  const CustomTextField = (props) => {
+    const { updateCardDetails } = useContext(CardContext);
+    return (
+      <TextField
+        id="outlined-name"
+        label={props.label}
+        value={props.value}
+        onChange={(event) => {
+          props.onChange(event.target.value);
+          updateCardDetails(props.schema.name, event.target.value);
+          setCardData((prev) => ({
+            ...prev,
+            [props.schema.name]: event.target.value,
+          }));
+        }}
+      />
+    );
+  };
+
+  const widgets = {
+    TextWidget: CustomTextField,
   };
 
   return (
@@ -103,6 +114,7 @@ const AddCard = () => {
       <Form
         schema={schema}
         uiSchema={uiSchema}
+        widgets={widgets}
         onSubmit={(formData) => handleSubmit(formData, id)}
       />
     </Container>
